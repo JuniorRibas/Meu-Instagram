@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<!--
+	Visualize by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Perfil</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.8.0/dist/sweetalert2.all.min.js"></script>
+		<script src="https://unpkg.com/sweetalert2@7.12.15/dist/sweetalert2.all.js"></script>
+		<style>
+		.ordem {
+			padding-top: 50px;
+			padding-right: 30px;
+			padding-bottom: 50px;
+			padding-left: 80px;
+			width: 50%;
+			}
+		
+		</style>
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<span class="avatar"><img src="<%= fotoPerfil %>" alt="" /></span>
+						<h1>Seu <strong>Perfil</strong> abaixo<br /></h1>
+						<ul class="icons">
+							<li><a id="pesquisa" class="icon style2 fas fa-binoculars"><span class="label">Pesquisa</span></a></li>
+							<!-- <li><a href="#" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="#" class="icon style2 fa-500px"><span class="label">500px</span></a></li>
+							<li><a href="#" class="icon style2 fa-envelope-o"><span class="label">Email</span></a></li> -->
+							<li><a id="foto" class="icon style2 fa-envelope-o"><span class="label">Foto</span></a></li> 
+							<li><a href="/sair" class="icon style2 fa fa-sign-out"><span class="label">Sair</span></a></li>
+						</ul>
+					</header>
+					<div class="style2">
+						<form id="formulario">
+							<label for="">Envie sua foto</label>
+							<input type="file" id="filaIMG" accept="" >
+							<button type="submit">Enviar</button>
+						</form>
+						<img src="" width="200" style="display:none;" />
+					</div>
+
+				<!-- Main -->
+					<section id="main">
+
+						<!-- Thumbnails -->
+						
+							<section class="row">
+									<%  if(imagens){  %>
+										<% for(var i =0; imagens.length > i ; i++){ %>
+									<div class="thumbnails ordem" >
+										<a href="<%= imagens[i].url  %>">
+											<img src="<%= imagens[i].url  %>" alt="" />
+											<h3><%= imagens[i].texto  %></h3>
+										</a>
+									</div>
+										<% } %>
+									<% } else { %>
+
+										<div>
+												<a href="">
+													<img src="" alt="" />
+													<h3>Você não possui fotos</h3>
+												</a>
+											</div>
+
+									<%}%>
+							</section>
+						
+							
+
+					</section>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p>&copy; Produzido por <a href="#">José Ribeiro</a></p>
+					</footer>
+
+			</div>
+		
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	<script>
+		$('#filaIMG').change(function(event) {
+			var tmppath = URL.createObjectURL(event.target.files[0]);
+		
+			console.log( "Path change" + tmppath);
+		});
+
+		$("#formulario").submit(function(){
+			var foto =$("#filaIMG")
+			console.log( foto.val() )
+			return false
+		})
+
+
+
+
+
+	$("#pesquisa").on("click", function () {
+	(async function getIpAddress () {
+	const {value: nick} = await Swal.fire({
+	title: 'Digite o nick do perfil a ser verificado',
+	input: 'text',
+	showCancelButton: true,
+	inputValidator: (value) => {
+		if (!value) {
+		return 'Você precisa colocar um nick'
+		}
+	}
+	})
+	if (nick) {
+		$.post("/term",
+		{
+			termo: nick,
+		},
+		function(data, status){
+			console.log("Status da requisição "+ status)
+		});	
+	$.ajax({
+			url: '/result',
+			method: "POST",
+			dataType: "JSON",
+			beforeSend: function(){
+			let timerInterval
+			Swal.fire({
+			title: 'Verificando dados...!',
+			html:
+				'Espere <strong style="color:#000000"></strong> segundo.<br/><br/>' ,
+				
+			timer: 4000,
+			onBeforeOpen: () => {
+				const content = Swal.getContent()
+				const $ = content.querySelector.bind(content)
+
+
+				Swal.showLoading()
+
+
+				timerInterval = setInterval(() => {
+				Swal.getContent().querySelector('strong')
+					.textContent = (Swal.getTimerLeft() / 1000)
+					.toFixed(0)
+				}, 100)
+			},
+			onClose: () => {
+				clearInterval(timerInterval)
+			}
+			})
+				
+			},
+			success: function(data){
+				
+				var texto =
+					'<strong style="color:#000000">Você segue a conta?: '+SN(data.relacao.following) + '</strong><br/>'+
+					'<strong style="color:#000000">Ele(a) Te segue?: '+SN(data.relacao.followed_by) + '</strong><br/>'+
+					'<strong style="color:#000000">Ele(a) Te bloqueou?: '+SN(data.relacao.is_blocking_reel)+ '</strong><br/>'
+					function SN(text){
+						if(text === true){
+							return "sim"
+						}
+							return "não"
+					}
+
+					swal({
+						title: 'Status de você com '+ nick +"!",
+						html:"" +texto,
+						confirmButtonText: 'Fechar',
+						onBeforeOpen: () => {
+							//document.querySelector("strong#1").innerText = ""
+						}
+					})
+				console.log(data.relacao.following)
+			}
+		})
+	}
+	
+	})()
+	})
+				
+			</script>
+
+	</body>
+</html>

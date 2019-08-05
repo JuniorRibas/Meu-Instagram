@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Releaciomaentos</title>
+    <style>
+            .centro{
+             text-align: center
+         }
+         .loader {
+         border: 16px solid #f3f3f3;
+         border-radius: 50%;
+         border-top: 16px solid #1a02a3;
+         width: 120px;
+         height: 120px;
+         -webkit-animation: spin 2s linear infinite; /* Safari */
+         animation: spin 2s linear infinite;
+         }
+         
+ 
+         /* Safari */
+         @-webkit-keyframes spin {
+         0% { -webkit-transform: rotate(0deg); }
+         100% { -webkit-transform: rotate(360deg); }
+         }
+ 
+         @keyframes spin {
+         0% { transform: rotate(0deg); }
+         100% { transform: rotate(360deg); }
+         }
+         .centralizado {
+             margin: 0 auto;
+             }
+ 
+        </style>
+</head>
+<body>
+
+<dir class="centro" >
+        <% if( !rel ){ %>
+
+            <div id="procurando">
+                <h1>Procurando na net.....</h1>
+                <div class="loader centralizado"></div>
+            </div>
+    
+    
+        <%} else{ %>
+        <table id="tabela" border="2" class="centro">
+            <tr>
+                <td>Nick da Conta</td>
+                <td>Voce esta seguindo?</td>
+                <td>Ele(a) esta te segundo?</td>
+                <td>Ele(a) te bloqueou?</td>
+                <td>Ele(a) te mutou?</td>
+            </tr>
+            <tr>
+                <td><%= termo %></td>
+                <td><%= rel.following %></td>
+                <td><%= rel.followed_by %></td>
+                <td><%= rel.blocking %></td>
+                <td><%= rel.muting %></td>
+            </tr>
+        </table>
+        <%}%>
+
+</dir>
+  
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script>
+                var tamanho = $('#procurando').html().length;
+                console.log(tamanho)
+                if(tamanho < 20){
+                    $('#tabela').show();
+                    $('#procurando').hide();
+                    $('#btn').show();
+                    
+                }else{
+                    setTimeout(function(){
+                    $("#tabela").load("#tabela");
+                    window.location.reload();
+                    },2000)
+                }
+            
+            </script>
+</body>
+</html>
